@@ -1,0 +1,116 @@
+一、、nvm、npm、nodejs的关系
+ nvm:nodeJs版本管理工具,管理nodejs版本和npm版本
+ nodeJs: reactNative开发过程中所需要的代码库。
+ npm:是随同nodeJs一起安装的包管理工具，npm管理对应nodeJs的第三方插件
+
+   常见的使用场景有以下几种：
+
+   . 允许用户从npm服务器下载别人编写好的第三方包到本地使用（例如淘宝服务器）
+
+   . 允许用户将自己编写的包上传到NPM服务器供别人使(例如自己搭建的npm服务器)
+
+ nvm、nodejs、npm的关系：
+
+   (1)nvm管理构建nodejs和对应的npm,npm管理对应nodejs的第三方插件
+
+　 (2)一个reactNative项目只包含一个nodejs和npm,npm和nodejs是配套关系，一对一的关系。
+
+二、、nvm命令使用
+
+淘宝镜像
+阿里云镜像
+网易镜像
+	1、安装NVM
+		GitHub搜索nvm，其中nvm-windows才是我们需要的
+		查看Readme，去下载安装
+		下载安装版就好nvm-setup.zip
+		
+		安装完成之后环境变量中会自动添加：
+		NVM_HOME  C:\Users\shu_1123\AppData\Roaming\nvm
+		NVM_SYMLINK  C:\Program Files\nodejs
+	2、安装完成之后下载镜像
+		在setting.txt（C:\Users\shu_1123\AppData\Roaming\nvm）中添加以下镜像
+		node_mirror: https://npm.taobao.org/mirrors/node/
+		npm_mirror: https://npm.taobao.org/mirrors/npm/
+	3、nvm install之后要想使用node命令，必须先执行命令行nvm use 6.9.2
+		Installation complete. If you want to use this version, type
+		nvm use 6.9.2
+		
+		node -v查看版本
+		npm -v
+		nvm list查看当前已经安装的nvm
+	4、npm安装的第三方插件将会安装在C:\Users\shu_1123\AppData\Roaming\nvm\v6.9.2\node_modules\npm路径下
+		npm install supervisor -g   -g代表global
+supervisor作用：
+在开发 Node.js 实现的 HTTP 应用时会发现,无论你修改了代码的哪一个部分,都必须终止Node.js然后重新运行。
+这是因为 Node.js 只有在第一次引用到某一部分时才会去解析 本文件,以后都会直接访问内存,避免重复载入,而 PHP 则是重新读取并解析脚本(如果没有专门的优化配置)。 
+Node.js的这种设计虽然有利于提高性能,却不利于开发调试,因 为我们在开发过程中总是希望修改之后立即看到结果,而不是每次都要终止并重新启动。 
+supervisor 可以帮助你实现这个功能,它会监视你对代码的改动,并自动重动 Node.js。 
+使用方法很简单,首先使用 npm 安装 supervisor:
+
+$ npm install -g supervisor
+
+1如果你使用的是 Linux 或 Mac，可以使用 sudo npm install -g supervisor来安装。
+
+	
+nvm -v 查看版本（查看帮助命令）
+nvm arch 查看操作系统位数（32 或是64位）
+nvm install <version> [arch] 安装NVM版本的语法  arch默认是64 位
+	nvm install 6.9.2 64
+	nvm install latest  安装最新版本
+nvm uninstall <version> 卸载
+	nvm uninstall 6.9.2 
+
+
+npm list查看已经安装的第三方node插件
+npm list -g查看全局已经安装的node第三方插件（全部文件内容较多）
+npm list -g --depth=0 查看第一层的全局已经安装的node第三方插件
+
+************如果出现XXX不是内部外部命令，就要查看下XXX在nvmC:\Users\shu_1123\AppData\Roaming\nvm是否已经安装***************
+尽量不要单独升级node或是npm，一定要一块升级
+
+怎么在多个npm版本下创建自己的第三方插件？
+1.nvm list查看当前已经安装的nvm
+
+2.nvm use 4.6.0进入想安装的版本的路径下
+
+3.npm install nodemon -g 安装第三方插件
+	查看第三方插件是否安装成功   xxx -v查看版本或是XXX -help
+
+
+	nvm设置的淘宝镜像对npm并没有帮助，npm还要自己设置淘宝镜像
+    npm config list查看配置文件
+	npm config set registry=https://registry.npm.taobao.org 配置淘宝镜像，这样下载比较快速，，，在某一个版本下配置淘宝镜像，所有的版本都会配置
+	因为公用一个userconfig C:\Users\shu_1123\.npmrc配置文件
+	
+npm配置淘宝镜像的另一种方法？
+alias cnpm="npm --registry=https://registry.npm.taobao.org \
+--cache=$HOME/.npm/.cache/cnpm \
+--disturl=https://npm.taobao.org/dist \
+--userconfig=$HOME/.cnpmrc"
+
+最好不要使用alias，可能会导致某些插件用不了	
+	
+nodejs的作用；方便程序员使用javascript来调用操作系统及相关硬件的代码库；
+mean.js-MEAN : Mongodb、Express、Angular、Node.js	
+
+安装mongoDB，在bin文件下运行mongod.exe发现一闪而过。。在bin文件下打开命令行，执行mongod.exe命令发现缺少数据库文件的存储位置
+mongoDB数据存储的默认位置是： C:\data\db\	
+解决方法：
+1、自己手动创建C:\data\db\文件，然后再次执行mongod.exe，正确执行
+
+2、重新设置C:\data\db路径
+windows管道命令筛选输出结果mongod.exe -h | findstr dbpath
+
+
+mongod.exe -h | grep dbpath   查找修改dbpath的命令  grep命令可能不能用
+mongod.exe -h | findstr dbpath  查找修改dbpath的命令  grep命令可能不能用
+	
+mongod.exe --dbpath D:\db	在D:\db初始化数据库
+
+可以创建脚本文件，这样不同每次都执行命令mongod.exe --dbpath D:\db
+mongdb_start.bat 数据库启动脚本，快捷方式；注意dbpath路径一定要存在
+
+
+nodemon app.js监控代码
+node app.js运行app.js,会出现一个端口号，在网页上执行localhost：端口号就可以打开网页端的js了
