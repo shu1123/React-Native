@@ -1,0 +1,116 @@
+﻿/**
+ * Created by shu_1123 on 2018/9/9.
+ */
+/*
+//创建对象
+var x = 3;
+alert(typeof  x)
+*/
+
+//Object
+var p = new Object();
+p.name ="张三";
+p.age = 20;
+p.sayName = function () {
+    console.log(this.name);
+}
+
+p.sayName();
+//字面量
+var p2 = {name:"rose",age :20,sayName:function () {
+    console.log(this.name);
+}}
+
+p2.sayName();
+
+//工厂模式
+function createPerson(name,age) {
+    var o = new Object();
+    o.name = name;
+    o.age= age;
+    o.sayName = function () {
+        console.log(this.name);
+    }
+    return o;
+}
+var c = createPerson("李四",25);
+c.sayName();
+/*===========一个类中不能同时有两个相同的函数===================================*/
+/*
+function Person(name,age)与function Person() 只能存在一个
+*/
+/*//构造函数
+function Person(name,age) {
+    this.name = name;
+    this.age= age;
+    this.sayName = function () {
+        console.log(this.name);
+}
+}
+var d = new Person("jack",21);
+d.sayName();*/
+
+/*
+构造函数的不同之处：
+没有显示的创建对象
+直接将属性和方法赋给了this对象
+没有return语句
+构造函数的问题：
+每个函数都在每个实例上重新创建一遍，person1和person2都有一个名为sayName的函数，但是两个sayName函数是两个不同的Function实例
+*/
+//原型模式
+/*
+理解原型对象prototype
+我们创建的每个函数都有一个prototype属性，这个属性是一个指针，指向一个对象，
+而这个对象的用途是包含可以由特定类型的所有实例共享的属性和方法。
+*/
+
+/*function Person() {
+
+}
+Person.prototype.name = "Tom";
+Person.prototype.age = 29;
+Person.prototype.sayName = function () {
+    console.log(this.name);
+}
+
+var  ef = new Person();
+ef.sayName()*/
+
+//原型方式的变形写法
+function Person(name,age) {
+    this.name = name;
+    this.age= age;
+}
+Person.prototype.sayName = function () {
+    console.log(this.name);
+}
+var  f = new Person("Mary",30);
+/*Undefined 和 Null
+Undefined 这个值表示变量不含有值。
+可以通过将变量的值设置为 null 来清空变量。*/
+console.log(f.sayName());
+
+//继承
+//父类型
+function SuperType() {
+    this.superFlag = true;
+}
+SuperType.prototype.getSuperValue = function () {
+    return this.superFlag;
+}
+//子类型
+function SubType() {
+    this.subFlag = false;
+}
+//关键点：继承的关键点是子类型的原型指针指向父类型的构造方法
+SubType.prototype = new SuperType();
+//为什么不是SubType.prototype = SuperType.prototype;,因为SubType.prototype = new SuperType();包括构造函数的属性
+//SubType.prototype = SuperType.prototype;
+
+var sub = new SubType();
+console.log(sub.getSuperValue());
+console.log(sub.superFlag);
+
+
+

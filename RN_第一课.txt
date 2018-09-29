@@ -1,0 +1,161 @@
+﻿
+1、关于css，html等没有源码，如果遇见不知道的问题怎么办？
+	查找API
+	w3school网站：
+	http://www.w3school.com.cn/
+2、
+
+<1>块级元素：div
+display：默认是block
+默认占一整行，可以改变宽高
+
+<2>行内元素：span
+display：默认是inline
+默认随内容大小，不可以改变宽高
+当display属性我inline-block时，span功能将默认随内容大小，可以改变宽高
+
+
+修改display属性，可以是标签功能互换
+
+3、、、
+选择器：
+1、通配符   *
+	/*去掉网页默认边框*/
+        *{
+            padding: 0px;
+            margin: 0px;
+        }
+2、标签选择器       div：所有的div标签都会应用这个样式
+	div{
+            border: 1px solid red;
+            width: 100px;
+            display: inline;
+        }
+3、类选择器     多个标签可以具有相同的class
+	/*类选择器*/
+        .title{
+            color: blue;
+            font-size: 14px;
+        }
+		<span class="title">Java</span>
+		<span class="title">Android</span>
+4、ID选择器（ID选择器是唯一的对应一个标签；一个页面不能有多个标签具有相同的ID，但是可以有多个class相同的标签）
+	#MyDiv{
+            width:200px;
+            height: 300px;
+            border: 1px solid red;
+            padding-left: 10px;
+            margin:10px;
+        }
+	<div id="MyDiv">ccc</div>
+
+
+4、、混合使用：
+	span.title{
+		color: blue;
+        font-size: 20px;
+	}
+
+5、、
+JavaScript：直译式脚本语言，一种动态类型。弱类型的语言。
+	直译型：不需要经过编译器先编译成机器码，之后直接在CPU中执行，相反，这种语言需要通过直译器，在执行期动态直译
+	
+	动态类型，意味着相同的变量可用作不同的类型
+	var x;
+	var x = 6;
+	var x = "Bill";
+6、、
+avaScript中number、string、boolean、null和undefined型数据都是值类型，由于值类型数据占据的空间都是固定的，所以可以把它们存储在狭窄的内存栈。object、function和array等对象都是引用型数据
+
+
+JavaScript:初始目的是处理一些以前有服务器端负责的一些表单验证
+ECMAScript：JavaScript语言的标准
+ECMAScript6：JavaScript语言的下一代标准，简称ES6
+
+ECMA5.0已全面支持，ECMA6.0正在慢慢实行支持
+
+
+===============================lesson   1===============================================================
+
+let a= "lesson one";
+let关键字如果不认识，则File--Settings---Languages&Framework---JavaScript;选择ECMAScript6
+
+1、eS6转成ES5
+转换过程：
+1、创建一个工程
+2.在该工程的目录下执行npm init
+3、使用Babel来执行ES6到ES5的转换
+		babel全局安装
+		npm install -g babel-cli
+
+4、在当前项目中安装转换插件（插件中的js代码，将用于转换）：
+npm install babel-preset-es2015 –save
+5、使用WebStorm打开第一步创建的nodejs工程，在工程中创建一个js文件，并编写ES6代码
+	手动将ES6转换成ES5
+babel es6.js --out-file es5.js --presets es2015
+
+6、自动转换   -w代表watch
+babel es6.js -w --out-file es5.js --presets es2015
+
+
+但是这种转换需要每次都进行一次转换：es6--->es5的转换
+
+解决办法：
+在HTML中写入转换代码，当浏览器进行加载时实时进行修改
+1、
+在页面中实时转换ES6到ES5
+	在当前项目安装babel-core插件（在网页上实时转换ES6到ES5）
+npm install babel-core@5 –save
+2、
+	HTML页面引入babel-core实时转换js代码
+/node_modules/babel-core/browser.min.js
+
+如果报错，查询browser.min.js看别人怎么写的？
+<head>
+    <script type="text/javascript" src="node_modules/babel-core/browser.min.js"></script>
+    <script type="text/babel" src="es6.js"></script>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+3、、、浏览器实时刷新
+使用Browsersync实时刷新页面和
+	Browsersync能让浏览器实时、快速响应您的文件更改（html、js、css、sass、less等）并自动刷新页面。
+	安装Browsersync
+npm install -g browser-sync
+	在当前项目目录下启动Browsersync，开始监听
+browser-sync start --server --files "**"
+
+打开的界面的链接一定是：
+http://localhost:3000/03.html
+
+html界面一定是：
+<head>
+    <script type="text/javascript" src="node_modules/babel-core/browser.min.js"></script>
+    <script src="node_modules/babel-core/browser-polyfill.min.js"></script>
+    <script type="text/babel" src="es6.js"></script>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+
+C:\OS_D\WebstormProjects\MyDemo1>browser-sync start --server --files "**"
+[Browsersync] Access URLs:
+ --------------------------------------
+       Local: http://localhost:3000
+    External: http://192.168.0.103:3000
+ --------------------------------------
+          UI: http://localhost:3001
+ UI External: http://192.168.0.103:3001
+ --------------------------------------
+[Browsersync] Serving files from: ./
+[Browsersync] Watching files...
+[Browsersync] Reloading Browsers...
+[Browsersync] Reloading Browsers...
+[Browsersync] Reloading Browsers...
+[Browsersync] Reloading Browsers... (buffered 2 events)
+[Browsersync] Reloading Browsers...
+[Browsersync] Reloading Browsers... (buffered 2 events)
+[Browsersync] Reloading Browsers... (buffered 2 events)
+[Browsersync] Reloading Browsers...
+

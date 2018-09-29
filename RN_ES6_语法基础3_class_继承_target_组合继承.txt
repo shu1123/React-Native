@@ -1,0 +1,435 @@
+一、、class
+
+	//以前定义类的方法
+	/*function User(name,age) {
+		this.name = name;
+		this.age = age;
+	}
+
+	User.prototype.show = function () {
+		console.log(`hello ,I am ${this.name},${this.age} years old!`);
+	};
+	var u = new User("jack",21);
+	u.show();//hello ,I am jack,21 years old!*/
+
+
+	//现在定义类的方法
+	class User{
+		//构造函数统一命名为constructor
+		constructor(name,age) {
+			this.name = name;
+			this.age = age;
+		}
+		show () {
+			console.log(`hello ,I am ${this.name},${this.age} years old!`);
+		}
+	}
+	var u = new User("jack",21);
+	u.show();//hello ,I am jack,21 years old!
+	//说明User是一个方法，本质上仍是原来的语法，只是原来的类的定义方法进行了封装
+	console.log(typeof User);//function
+	//说明类的方法都是定义在原型上的
+	console.log(u.show == User.prototype.show);//true
+
+	
+二、、继承
+
+	不支持多继承（一个类继承多个父类）
+
+		class Point{
+			constructor(x,y){
+				this.x = x;
+				this.y = y;
+			}
+			toString(){
+				return this.x+" "+this.y;
+			}
+		}
+		//本质上还是通过原型来实现继承的
+		class My3DPoint extends Point{
+			constructor(x,y,z){
+				//一定要继承super
+				super(x,y);
+				this.z = z;
+			}
+			toString(){
+				return "3D:"+super.toString()+" "+this.z;
+			}
+		}
+		//默认支持多态
+		let p = new My3DPoint(1,2,3);
+		console.log(p.toString());//3D:1 2 3
+
+		//这里p到底是子类的实例还是父类的实例
+		console.log(p instanceof My3DPoint);//true
+		console.log(p instanceof Point);//true
+		//说明是子类的实例
+		console.log(p.constructor);//[Function: My3DPoint]
+
+
+	三、、静态方法
+	//静态方法
+	var mycount = 0;
+	class Point{
+		constructor(x,y){
+			this.x = x;
+			this.y = y;
+		}
+		toString(){
+			return this.x+" "+this.y;
+		}
+		static count(){
+			mycount++;
+			return mycount;
+		}
+	}
+	let p = new Point(2,3);
+	//静态方法只能由类来调用，不能由实例来调用
+	Point.count();
+	console.log(Point.count());;
+	console.log(Point.count());;
+
+
+
+
+
+四。。new.target 属性
+
+	new是从构造函数生成实例对象的命令。ES6 为new命令引入了一个new.target属性，该属性一般用在构造函数之中，返回new命令作用于的那个构造函数。如果构造函数不是通过new命令调用的，new.target会返回undefined，因此这个属性可以用来确定构造函数是怎么调用的。
+
+	function Person(name) {
+	  if (new.target !== undefined) {
+		this.name = name;
+	  } else {
+		throw new Error('必须使用 new 命令生成实例');
+	  }
+	}
+
+	// 另一种写法
+	function Person(name) {
+	  if (new.target === Person) {
+		this.name = name;
+	  } else {
+		throw new Error('必须使用 new 命令生成实例');
+	  }
+	}
+
+	var person = new Person('张三'); // 正确
+	var notAPerson = Person.call(person, '张三');  // 报错
+	上面代码确保构造函数只能通过new命令调用。
+
+	Class 内部调用new.target，返回当前 Class。
+
+	class Rectangle {
+	  constructor(length, width) {
+		console.log(new.target === Rectangle);
+		this.length = length;
+		this.width = width;
+	  }
+	}
+
+	var obj = new Rectangle(3, 4); // 输出 true
+	需要注意的是，子类继承父类时，new.target会返回子类。
+
+	class Rectangle {
+	  constructor(length, width) {
+		console.log(new.target === Rectangle);
+		// ...
+	  }
+	}
+
+	class Square extends Rectangle {
+	  constructor(length) {
+		super(length, length);
+	  }
+	}
+
+	var obj = new Square(3); // 输出 false
+	上面代码中，new.target会返回子类。
+
+	利用这个特点，可以写出不能独立使用、必须继承后才能使用的类。
+
+	class Shape {
+	  constructor() {
+		if (new.target === Shape) {
+		  throw new Error('本类不能实例化');
+		}
+	  }
+	}
+
+	class Rectangle extends Shape {
+	  constructor(length, width) {
+		super();
+		// ...
+	  }
+	}
+
+	var x = new Shape();  // 报错
+	var y = new Rectangle(3, 4);  // 正确
+	上面代码中，Shape类不能被实例化，只能用于继承。
+
+	注意，在函数外部，使用new.target会报错。
+
+
+五：继承比较
+
+	//当原型包含引用类型的实例时，这个实例会被所有对象共享
+	//原型继承
+	//=================案例一==================
+	//父类型
+	/*function SuperType() {
+		this.colors = ["red","white"];
+	}
+	//子类型
+	function SubType() {
+
+	}
+	//关键点：继承的关键点是子类型的原型指针指向父类型的构造方法
+	SubType.prototype = new SuperType();
+
+	var sub1 = new SubType();
+	sub1.colors.push("blue");
+	sub1.x = 3;
+	console.log(sub1.colors);
+	console.log(sub1.x);
+
+	var sub2 = new SubType();
+	console.log(sub2.colors);
+	console.log(sub2.x);*/
+	/*
+	 [ 'red', 'white', 'blue' ]
+	 [ 'red', 'white', 'blue' ]sub2没有push进入color也变了
+	 */
+	//=================案例二==================
+	//父类型
+	/*function SuperType() {
+		this.x = 1;
+		this.colors = ["red","white"];
+	}
+	//子类型
+	function SubType() {
+		this.x = 2;
+
+	}
+	//关键点：继承的关键点是子类型的原型指针指向父类型的构造方法
+	SubType.prototype = new SuperType();
+
+	var sub1 = new SubType();
+	sub1.colors.push("blue");
+	sub1.x = 3;
+	console.log(sub1.colors);
+	console.log(sub1.x);
+
+	var sub2 = new SubType();
+	console.log(sub2.colors);
+	console.log(sub2.x);*/
+	/*
+	[ 'red', 'white', 'blue' ]
+	3
+	[ 'red', 'white', 'blue' ]sub2没有push进入color也变了
+	2
+	*/
+	/*
+	sub2也改变的原因：
+	首先是因为color只在父类中进行了声明，SubType.prototype是一个指针，指向了一个new SuperType()对象
+
+	所以sub1.colors指向的其实是这个SuperType对象的color
+	 sub2.colors指向的也是这个SuperType对象的color
+	 所以修改sub1，其实就是修改指针指向的这个SuperType对象，sub2也随之改变了
+	 */
+	//=================案例三==================
+	function SuperType() {
+		this.colors = ["red","white"];
+	}
+	//子类型
+	function SubType() {
+		SuperType.call(this);
+		/**
+		 * 相当于
+		 * function SuperType(){
+			this.colors = ["red","white"];
+		}
+		 */
+
+	}
+
+	var sub1 = new SubType();
+	sub1.colors.push("blue");
+	console.log(sub1.colors);
+
+	var sub2 = new SubType();
+	console.log(sub2.colors);
+	//[ 'red', 'white', 'blue' ]
+	//[ 'red', 'white' ]
+	/**
+	 * 原因：
+	 * SuperType.call(this); 相当于声明一个SuperType的构造函数，而该函数在子类的构造方法中
+	 * sub1创建一个子类，调用了子类的构造方法，相当于创建了一个function函数
+	 * sub2创建一个子类，调用了子类的构造方法，相当于又创建了一个function函数
+	 * 每个函数都在每个实例上重新创建一遍
+	 */
+
+	//================对比比较=============
+	//构造函数
+	function Person(name,age) {
+		this.name = name;
+		this.age= age;
+		this.sayName = function () {
+			console.log(this.name);
+		}
+	}
+	var d = new Person("jack",21);
+	d.sayName();
+
+	/*
+	 构造函数的不同之处：
+	 没有显示的创建对象
+	 直接将属性和方法赋给了this对象
+	 没有return语句
+	 构造函数的问题：
+	 每个函数都在每个实例上重新创建一遍，person1和person2都有一个名为sayName的函数，但是两个sayName函数是两个不同的Function实例
+	 */
+
+	//常用的是组合继承
+	//原型+继承
+	//父类型
+	function SuperType(name) {
+		this.name = name;
+		this.colors = ["red","white"];
+	}
+	SuperType.prototype.sayHi = function () {
+		console.log("say Hi");
+	}
+	//子类型
+	function SubType(name,age) {
+		SuperType.call(this,name);//加上name之后就会执行父类型的this.name = name;
+		this.age = age;
+	}
+
+	SubType.prototype = new SuperType();
+
+	SubType.prototype.sayAge = function () {
+		console.log(this.age);
+	}
+
+	var s1 = new SubType("jack",20);
+	s1.sayHi();
+	s1.sayAge();
+	s1.colors.push("blue");
+	console.log(s1.colors);
+
+	var s2 = new SubType("jack",20);
+	console.log(s2.colors);
+
+	console.log(s1.constructor === SuperType);
+	/**
+	 * say Hi
+	 20
+	 [ 'red', 'white', 'blue' ]
+	 [ 'red', 'white' ]
+	 true
+	 */
+
+	//这种方法的弊端：是s1,s2的构造函数变成了SuperType
+	//所以可以在SubType.prototype = new SuperType();之后添加SubType.prototype.constructor = SubType;
+	//添加之后console.log(s1.constructor === SuperType);等于false
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
