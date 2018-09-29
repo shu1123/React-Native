@@ -1,0 +1,95 @@
+
+es6阮一峰学习网站：
+http://es6.ruanyifeng.com/
+
+语法基础一：
+
+1、let和var的区别
+	var：可以夸代码块
+	let:只在代码块内部有用，使用更加严格和规范
+
+	测试代码：
+	{
+		var a= "AAA";
+		let b= "BBB";
+	}
+
+	console.log(a);
+	console.log(b);//打印失败
+
+
+	在for循环中也是这样
+
+	测试代码2：
+	、、、定义顺序
+	允许代码: 打印结果undefined
+	console.log(a);
+	var a= "AAA";
+	编译失败：
+	console.log(a);
+	let a= "AAA";
+
+
+	案例：
+	var a = [];
+	for(var i = 0;i<5;i++){
+		a[i]=function () {
+			console.log(i);
+		}
+	}
+	a[2]();
+	输出结果：
+	5
+	因为var i可以跨代码块
+
+	var a = [];
+	for(let i = 0;i<5;i++){
+		a[i]=function () {
+			console.log(i);
+		}
+	}
+	a[2]();
+	输出结果为：2
+2、const常量
+	//const常量  不能修改，编译报错
+	const a = "jack";
+	a = "AAA";
+
+	//常量对象  常量对象不能修改对象的引用，但是可以修改对象的属性
+	const obj = {name:"jack"};
+	obj = {name:"AAA"};
+	obj.name= "AAA";
+	console.log(obj.name);
+
+
+	//防止常量对象修改对象的属性
+	//冻结对象
+	const obj = Object.freeze({name:"jack"})
+	obj.name= "AAA";
+	console.log(obj.name);
+
+3/解构赋值
+
+
+//解构赋值
+//数组的解构赋值  相当于将AA赋值给a对象，21赋值给b对象  有序赋值，顺序改变赋值也会改变
+let [a,b]=["AA",21];
+console.log(a);
+console.log(b);
+
+
+//对象的解构赋值  无序，但是对象的字段名一定要一一对应
+let {name,age} = {age:21,name:"BB"};
+console.log(name);
+console.log(age);
+//作用在解析json数据的时候有用
+
+
+
+
+
+
+
+
+
+
